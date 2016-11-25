@@ -7,6 +7,8 @@
 #ifndef	H_SYSTEM
 #define	H_SYSTEM
 
+#include <stdio.h>
+
 #ifdef HAVE_CONFIG_H
 #include "config.h"
 #endif
@@ -135,6 +137,43 @@ extern int fdatasync(int fildes);
 
 #include "misc/fnmatch.h"
 
-#include <dlfcn.h>
+//#include <dlfcn.h>
+
+#define WIN32_LEAN_AND_MEAN
+#include <windows.h>
+#include <winsock2.h>
+#include <ws2tcpip.h>
+#include <io.h>
+#include <direct.h>
+#define EOPNOTSUPP ENOSYS
+#define S_ISUID 0
+#define S_ISGID 0
+#define S_ISVTX 0
+#define S_IWGRP S_IWUSR
+#define S_IXGRP S_IXUSR
+#define S_IXOTH S_IXUSR
+typedef int uid_t;
+typedef int gid_t;
+typedef int nlink_t;
+typedef int sigset_t; /* dummy */
+#define chown(path, uid, gid) (((uid) != 0 && (gid) != 0) ? (errno = ENOSYS, -1) : 0)
+#define chroot(path) (fprintf(stderr, "chroot(%s)\n", (path)), errno = ENOSYS, -1)
+#define fchdir(fd) (fprintf(stderr, "fchdir(%d)\n", (fd)), errno = ENOSYS, -1)
+#define getuid() 0
+#define getgid() 0
+#define lstat stat
+#define mkdir(path, mode) _mkdir(path)
+#define mkfifo(path, mode) (fprintf(stderr, "UNIMP: mkfifo(%s, %#o)\n", (path), (mode)), errno = ENOSYS, -1)
+#define mknod(path, mode, dev) (fprintf(stderr, "UNIMP: mknod(%s,%#o,%x)\n", (path), (mode), (dev)), errno = ENOSYS, -1)
+#define link(source, target) (fprintf(stderr, "UNIMP: link(%s,%s)\n", (source), (target)), errno = ENOSYS, -1)
+#define readlink(path, buf, size) (errno = EINVAL, -1)
+#define sleep(secs) Sleep((secs)*1000)
+#define symlink(source, target) (fprintf(stderr, "UNIMP: symlink(%s,%s)\n", (source), (target)), errno = ENOSYS, -1)
+char *realpath(const char *path, char resolved_path []);
+
+#define IS_DIR_SEP(c) ((c) == '/' || (c) == '\\')
+#define DIR_IS_ABSOLUTE(d) (IS_DIR_SEP((d)[0]) || (isalpha((d)[0]) && (d)[1] == ':' && IS_DIR_SEP((d)[2])))
+#define PATH_SEP ';'
+#define PATH_SEP_STRING ";"
 
 #endif	/* H_SYSTEM */

@@ -61,9 +61,12 @@ static char sccsid[] = "@(#)fts.c	8.6 (Berkeley) 8/14/94";
 #   define __errno_location()	(&errno)
 #   define dirfd(dirp)		-1
 #endif
-#if defined(__APPLE__)
-#   define __errno_location()	(__error())
-#endif
+
+#   define __errno_location() 	(&errno)
+#   define dirfd(dirp)		-1
+#   define stat64		_stati64
+#   define _STAT_VER		0
+#   define __fxstat64(_stat_ver, _fd, _sbp)	_fstati64((_fd), (_sbp))
 
 #include "system.h"
 #include <stdlib.h>

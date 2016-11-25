@@ -305,25 +305,6 @@ AC_SUBST(WITH_NSS_INCLUDE)
 AC_SUBST(WITH_NSS_LIB)
 
 #=================
-# Check for magic library.
-WITH_MAGIC_INCLUDE=
-WITH_MAGIC_LIB=
-
-AC_CHECK_HEADER([magic.h], [
-    AC_CHECK_LIB(magic, magic_open, [
-      WITH_MAGIC_INCLUDE=
-      WITH_MAGIC_LIB="-lmagic"
-    ],[
-      AC_MSG_ERROR([missing required library 'libmagic']) 
-    ])
-],[
-      AC_MSG_ERROR([missing required header magic.h]) 
-])
-
-AC_SUBST(WITH_MAGIC_INCLUDE)
-AC_SUBST(WITH_MAGIC_LIB)
-
-#=================
 # Check for popt library.
 WITH_POPT_INCLUDE=
 WITH_POPT_LIB=
@@ -615,7 +596,7 @@ AC_REPLACE_FUNCS(stpcpy stpncpy)
 AC_CHECK_FUNCS([secure_getenv __secure_getenv])
 
 AC_CHECK_FUNCS(
-   [mkstemp getcwd basename dirname realpath setenv unsetenv regcomp lchown utimes],
+   [mkstemp getcwd basename dirname],
    [], [AC_MSG_ERROR([function required by rpm])])
 
 AC_LIBOBJ(fnmatch)
